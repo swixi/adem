@@ -63,7 +63,7 @@ def adem(mono):
     output = []
     i = mono[0]
     j = mono[1]
-    for k in range(math.floor(i)):
+    for k in range(int(math.floor(i/2))):
         if (choose(j-k-1, i-2*k) % 2) != 0:
             new_mono = [i+j-k, k]
             output.append(new_mono)
@@ -118,7 +118,7 @@ def write_as_basis(input):
     # if we made it this far, we are already in admissible form
     return input
 
-# print(write_as_basis([[2,4]]))
+#print(write_as_basis([[2,4,2]]))
 
 
 
