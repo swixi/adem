@@ -57,16 +57,29 @@ def adem(mono):
 
     OUTPUT:
         a sum of monomials given by applying the Adem relations
-        an empty list signifies ZERO
+        an empty list signifies the identity, Sq^0
+        None signifies zero
     """
 
     output = []
     i = mono[0]
     j = mono[1]
-    for k in range(int(math.floor(i/2))):
+
+    if i == 0 and j == 0:
+        return []
+
+    for k in range(int(math.floor(i/2))+1):
         if (choose(j-k-1, i-2*k) % 2) != 0:
-            new_mono = [i+j-k, k]
+            # Sq^0 = 1
+            if k == 0:
+                new_mono = [i+j-k]
+            elif i+j-k == 0:
+                new_mono = [k]
+            else:
+                new_mono = [i+j-k, k]
             output.append(new_mono)
+    if not output:
+        return None
     return output
 
 
@@ -89,7 +102,7 @@ def write_as_basis(input):
         the input (and hence the output) need not be homogeneous (i.e. a sum of same-degree elements)
     """
 
-    if len(input) == 0:
+    if not input:
         return input
 
     # if the input is a sum of more than one monomial, process each part separately
@@ -118,9 +131,75 @@ def write_as_basis(input):
     # if we made it this far, we are already in admissible form
     return input
 
-#print(write_as_basis([[2,4,2]]))
+
+# reduce mod 2 applied to a list of monomials i.e. a list of lists
+# the output is a list of tuples, because there is no need to convert back to lists
+def reduce_mod_2(input):
+    counts = {}
+    for mono in input:
+        mono_t = tuple(mono)
+        if mono_t in counts:
+            counts[mono_t] += 1
+        else:
+            counts[mono_t] = 1
+    reduced_input = []
+    for mono_t in counts:
+        if counts[mono_t] % 2 != 0:
+            reduced_input.append(mono_t)
+    
+    return reduced_input
 
 
+# INPUT: sum of Steenrod squares, e.g. 4 2 4 + 1 2 corresponding to Sq^4 Sq^2 Sq^4 + Sq^1 Sq^2
+# OUTPUT: the sum as a list of lists e.g. [[4,2,4], [1,2]]
+#         return None if the input is not the valid format
+def parse_sum_from_string(input):
+    string_list = input.split('+')
+    mono_list = [mono.split(' ') for mono in string_list] # should contain ints as strings and possibly ""
+
+    mono_list_as_int = []
+    for mono_arr in mono_list:
+        new_mono = []
+        for num in mono_arr:
+            if num == "":
+                continue
+            num = try_parse_int(num)
+            if num is None:
+                return None
+            new_mono.append(num)
+        if new_mono:
+            mono_list_as_int.append(new_mono)
+    
+    return mono_list_as_int
 
 
+def try_parse_int(val):
+    try:
+        return int(val)
+    except ValueError:
+        return None
+
+
+def apply_adem_to_string(input):
+    mono_list = parse_sum_from_string(input)
+    if not mono_list or mono_list is None:
+        print("invalid format")
+    else:
+        print(tuple_list_to_string(reduce_mod_2(write_as_basis(mono_list))))
+
+
+# convert a list of monomials back into the string form 
+# ex: [(6,2), (3,)] -> 6 2 + 3
+def tuple_list_to_string(input):
+    output = ""
+    for mono_t in input:
+        mono_to_string = ""
+        for square in mono_t:
+            mono_to_string += str(square) + " "
+        output += mono_to_string.strip()
+        output += " + "
+    
+    if output == "":
+        return "Zero"
+    return output[:-3] # trailing " + "
 
