@@ -183,9 +183,9 @@ def try_parse_int(val):
 def apply_adem_to_string(input):
     mono_list = parse_sum_from_string(input)
     if not mono_list or mono_list is None:
-        print("invalid format")
+        return "invalid format"
     else:
-        print(tuple_list_to_string(reduce_mod_2(write_as_basis(mono_list))))
+        return tuple_list_to_string(reduce_mod_2(write_as_basis(mono_list)))
 
 
 # convert a list of monomials back into the string form 
