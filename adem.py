@@ -180,14 +180,6 @@ def try_parse_int(val):
         return None
 
 
-def apply_adem_to_string(input):
-    mono_list = parse_sum_from_string(input)
-    if not mono_list or mono_list is None:
-        return "invalid format"
-    else:
-        return tuple_list_to_string(reduce_mod_2(write_as_basis(mono_list)))
-
-
 # convert a list of monomials back into the string form 
 # ex: [(6,2), (3,)] -> 6 2 + 3
 def tuple_list_to_string(input):
@@ -203,3 +195,16 @@ def tuple_list_to_string(input):
         return "Zero"
     return output[:-3] # trailing " + "
 
+
+# apply adem relations to a polynomial of steenrod squares
+def apply_adem_to_string(input):
+    mono_list = parse_sum_from_string(input)
+    if not mono_list or mono_list is None:
+        return "invalid format"
+    else:
+        return tuple_list_to_string(reduce_mod_2(write_as_basis(mono_list)))
+
+
+# wrapper around apply_adem_to_string in order to print to stdout
+def print_adem(input):
+    print(apply_adem_to_string(input))
