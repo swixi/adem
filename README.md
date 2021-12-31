@@ -6,4 +6,4 @@ The code is based on that in https://github.com/swixi/steenrod/blob/master/src/m
 
 ## Note!
 
-You can try this code in a browser at http://regularcardinal.net/adem (as a [Flask](https://palletsprojects.com/p/flask/) app).
+You can try this code in a browser at https://regularcardinal.net/adem (previously a [Flask](https://palletsprojects.com/p/flask/) app, now served via Go -- see https://github.com/swixi/regularcardinal).
